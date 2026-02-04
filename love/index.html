@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Journey ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ffccd5;
+            --accent: #c9184a;
+            --bg: #fff0f3;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Kanit', sans-serif;
+            background: var(--bg);
+            color: #590d22;
+            overflow-x: hidden;
+        }
+
+        /* Heart Animation */
+        .heart-particle {
+            position: fixed;
+            top: -10%;
+            font-size: 20px;
+            animation: fall linear infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Container & Layout */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            text-align: center;
+            width: 100%;
+            border: 1px solid white;
+        }
+
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin: 0 0 10px 0;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px 20px;
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        button:hover { transform: scale(1.05); background: var(--accent); }
+
+        /* Custom Pop-up */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            justify-content: center; align-items: center;
+        }
+
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            max-width: 300px;
+            width: 85%;
+            text-align: center;
+            transform: translateY(20px);
+            transition: 0.3s;
+        }
+
+        .modal.show { transform: translateY(0); }
+
+        /* Memory Section */
+        #memory-page { display: none; }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .m-card {
+            background: var(--secondary);
+            height: 120px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .m-card.active {
+            background: white;
+            transform: rotateY(180deg);
+            border: 2px solid var(--primary);
+        }
+
+        .hidden-txt { display: none; font-size: 0.9rem; font-weight: bold; transform: rotateY(180deg); }
+        .m-card.active .hidden-txt { display: block; }
+        .m-card.active span:not(.hidden-txt) { display: none; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalBox">
+            <h2 id="modalTitle" style="margin-top:0"></h2>
+            <p id="modalMsg"></p>
+            <button onclick="closeModal()">ตกลง</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="login-page" class="glass-card">
+            <h1>Surprise!</h1>
+            <p>ใส่ "วันครบรอบ" เพื่อเปิดกล่องความลับ</p>
+            <input type="text" id="passInput" placeholder="ตัวเลข 4 หลัก (เช่น 0123)" maxlength="4">
+            <br>
+            <button onclick="checkPass()">ปลดล็อก ❤️</button>
+        </div>
+
+        <div id="memory-page" class="glass-card">
+            <h1>Our Journey</h1>
+            <p>แตะที่กล่องเพื่อดูสิ</p>
+            <div class="memory-grid">
+                <div class="m-card" onclick="flip(this)"><span>🎁</span><div class="hidden-txt">รักเธอที่สุดนะ อยู่ด้วยกันไปนานๆ ❤️</div></div>
+                <div class="m-card" onclick="flip(this)"><span>🎁</span><div class="hidden-txt">มีเธอแล้ว โลกก็น่ารักขึ้น รักนะ</div></div>
+                <div class="m-card" onclick="flip(this)"><span>🎁</span><div class="hidden-txt">รักเธอไม่ต้องมีเหตุผล แค่รู้ว่าขาดเธอไม่ได้</div></div>
+                <div class="m-card" onclick="flip(this)"><span>🎁</span><div class="hidden-txt">เธอคือความสุขของเรา รักมากๆ</div></div>
+            </div>
+            
+            <div id="final-touch" class="hidden" style="margin-top:40px;">
+                <hr style="border: 0.5px solid var(--secondary)">
+                <h2 style="font-family: 'Caveat'; font-size: 2.5rem;">I Love You</h2>
+                <p>รักนะคะ ขอบคุณที่อยู่ข้างกันเสมอ ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // สร้างหัวใจตก
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = ['❤️','💖','💗','🌸','✨'][Math.floor(Math.random()*5)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, 300);
+
+        function showModal(title, msg, isSuccess) {
+            const overlay = document.getElementById('modalOverlay');
+            const box = document.getElementById('modalBox');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMsg').innerText = msg;
+            overlay.style.display = 'flex';
+            setTimeout(() => box.classList.add('show'), 10);
+
+            if(isSuccess) {
+                window.isCorrect = true;
+            }
+        }
+
+        function closeModal() {
+            const box = document.getElementById('modalBox');
+            box.classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('modalOverlay').style.display = 'none';
+                if(window.isCorrect) {
+                    document.getElementById('login-page').style.display = 'none';
+                    document.getElementById('memory-page').style.display = 'block';
+                }
+            }, 300);
+        }
+
+        function checkPass() {
+            const pass = document.getElementById('passInput').value;
+            if(pass === "1017") { // <--- เปลี่ยนรหัสตรงนี้
+                showModal("ถูกต้องจ้า!", "เตรียมพบกับความรักที่รวบรวมไว้ให้เธอนะ ✨", true);
+            } else {
+                showModal("ว๊ายย ผิด!", "ลองนึกดูใหม่สิ วันที่สำคัญที่สุดของเราน่ะ 😋", false);
+            }
+        }
+
+        let flipped = 0;
+        function flip(el) {
+            if(!el.classList.contains('active')) {
+                el.classList.add('active');
+                flipped++;
+                if(flipped === 4) {
+                    document.getElementById('final-touch').classList.remove('hidden');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
